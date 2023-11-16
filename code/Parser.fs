@@ -3,6 +3,21 @@ module Parser
 open Combinator
 open System
 
+(*GRAMMAR*)
+let number = (pmany1 (pdigit |>> fun ds -> ds |> stringify |> int))
+let date = pright (pstring ("date ")) ((pleft number pchar ('-')) pseq(pleft(number pchar ('-')) number (fun (a,b) -> ) )) //convert this 
+let fillh20 = pright (pstring("h20 ")) (pmany1 (pdigit |>> fun ds -> ds |> stringify |> float)) //convert fill h20 time 
+
+//make into their respective types 
+let exp = date <|> pmany0 fillh20
+
+
+
+
+
+
+
+
 let r = new Random()
 
 (*
