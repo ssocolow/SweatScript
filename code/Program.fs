@@ -16,4 +16,4 @@ let main args =
             printfn "Invalid program."
             1
     with
-    | _ -> printfn "Usage: dotnet run day.rs"
+    | _ -> printfn "Usage: dotnet run day.rs > result.svg"

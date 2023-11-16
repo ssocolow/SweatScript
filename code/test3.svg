@@ -2,8 +2,7 @@
      width="1000" height="1000"
      xmlns="http://www.w3.org/2000/svg">
 
-<polyline points="122, 735 158, 653" stroke="blue" fill="none"
-       style="stroke: blue; stroke-width: 10;"/>
+<polyline points="122, 735.88 158, 653" stroke="blue" fill="none" style="stroke: blue; stroke-width: 10;"/>
 
   <image href="health_data_graph.svg" x="0" y="0" height="1500" width="1500"/>
 </svg>
