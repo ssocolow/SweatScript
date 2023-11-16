@@ -1,0 +1,11 @@
+<svg height="210" width="200">
+  <polyline
+     fill="none"
+     stroke="#0074d9"
+     stroke-width="3"
+     points="
+       0,120
+       20,60
+       40,80
+       60,20"/>
+</svg>
