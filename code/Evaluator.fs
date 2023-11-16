@@ -1,6 +1,15 @@
 module Evaluator
 
+type Date = string
 
+type Time = float
+
+type h2o = Time
+
+type Activity =
+| h2o list
+
+let CANVAS_SZ = 400
 
 let evalColor (color: Color) : string =
     match color with
