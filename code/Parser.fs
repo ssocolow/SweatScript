@@ -1,74 +1,29 @@
 module Parser
 
+open Evaluator
 open Combinator
 open System
 
 (*GRAMMAR*)
-let number = (pmany1 (pdigit |>> fun ds -> ds |> stringify |> int))
-let date = pright (pstring ("date ")) ((pleft number pchar ('-')) pseq(pleft(number pchar ('-')) number (fun (a,b) -> ) )) //convert this 
-let fillh20 = pright (pstring("h20 ")) (pmany1 (pdigit |>> fun ds -> ds |> stringify |> float)) //convert fill h20 time 
+let number = (pmany1 pdigit) |>> (fun ds -> stringify ds |> int)  <!> "number"
+//convert this
+// let date = pright (pstr ("date ")) ((pleft number (pchar '-')) pseq(pleft(number pchar ('-')) number (fun (a,b) -> ) )) <!> "date"
+let date = pright (pstr ("date ")) number <!> "date"
+
+//convert fill h2o time
+// let fillh2o = pright (pstr("h2o ")) (pmany1 (pdigit |>> (fun ds -> ds |> stringify |> float))) <!> "fillh20"
+let fillh2o = (pright (pstr("h2o ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float))) <|> pright (pstr(" h2o ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) <!> "fillh2o"
 
 //make into their respective types 
-let exp = date <|> pmany0 fillh20
+let expr = pseq date (pmany0 fillh2o) (fun (a, b) -> {date = a; activity = b}) <!> "exp"
 
-
-
-
-
-
-
-
-let r = new Random()
-
-(*
- *   <expr> ::= <line><expr>
- *           |  repeat<n><line><expr>
- *           |  <empty>
- *   <line> ::= <color> line
- *      <n> ::= (is any positive integer)
- *  <color> ::= red | green | blue | purple
- *)
-
-let randomLine (color: Color) : Line =
-    let a = { x = r.Next CANVAS_SZ; y = r.Next CANVAS_SZ}
-    let b = { x = r.Next CANVAS_SZ; y = r.Next CANVAS_SZ}
-    { c1 = a; c2 = b; color = color }
-
-let pad p = pbetween pws0 p pws0
-
-let expr, exprImpl = recparser()
-
-let color =
-    (pstr "red" |>> (fun _ -> Red)) <|>
-    (pstr "green" |>> (fun _ -> Green)) <|>
-    (pstr "blue" |>> (fun _ -> Blue)) <|>
-    (pstr "purple" |>> (fun _ -> Purple))
-
-let line =
-    pleft
-        (pad color)
-        (pad (pstr "line"))
-    |>> randomLine
-
-let n = pmany1 pdigit |>> (fun ds -> stringify ds |> int)
-
-let repeat =
-    pseq
-        (pright (pad (pstr "repeat")) (pad n))
-        line
-        (fun (i, l) ->
-            [0..i-1] |> List.map (fun _ -> randomLine l.color)
-        )
-exprImpl :=
-    pmany1 (
-        line |>> (fun l -> [l]) <|>
-        repeat
-    ) |>> List.concat
 
 let grammar = pleft expr peof
 
-let parse (input: string) : Canvas option =
-    let i = prepare input
+let parse (input: string) : Day option =
+    let DEBUG = false
+    //let i = prepare input
+    let i = if DEBUG then debug input else prepare input
     match grammar i with
     | Success(ast, _) -> Some ast
     | Failure(_,_) -> None
