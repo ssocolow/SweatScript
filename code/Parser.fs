@@ -17,7 +17,7 @@ let fillh2o = (pright (pstr("h2o ")) ((pmany1 pdigit) |>> (fun ds -> ds |> strin
 //make into their respective types 
 let expr = pseq date (pmany0 fillh2o) (fun (a, b) -> {date = a; activity = b}) <!> "exp"
 
-
+//full grammar
 let grammar = pleft expr peof
 
 let parse (input: string) : Day option =
