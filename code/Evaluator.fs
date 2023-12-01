@@ -11,16 +11,24 @@ type HeartRate = int
 type H2o = Time
 type H2oList = H2o list
 
-type Run = {time: Time; avgHR: HeartRate}
-type RunList = Run list
+// type Run = {time: Time; avgHR: HeartRate option}
+// type RunList = Run list
 
-type Bike = {time: Time; avgHR: HeartRate}
-type BikeList = Bike list
+// type Bike = {time: Time; avgHR: HeartRate}
+// type BikeList = Bike list
 
-type Berg = {time: Time; avgHR: HeartRate}
-type BergList = Berg list
+// type Berg = {time: Time; avgHR: HeartRate}
+// type BergList = Berg list
 
-type Activity = [RunList; BikeList; BergList]
+// type Activity = [RunList; BikeList; BergList]
+
+type Activity = 
+| Run of exercise List
+| Bike of exercise List
+| Berg of exercise List
+| Squash of exercise List
+and exercise
+| {time: Time; avgHR: HeartRate}
 
 //activity is a list of records 
 type Day = {date: Date; up: Up; sleep: Sleep; activity: Activity}

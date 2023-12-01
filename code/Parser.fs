@@ -17,11 +17,23 @@ let fillh2o = pright (pstr(" h2o ")) ((pmany1 pdigit) |>> (fun ds -> ds |> strin
 let up = pright (pstr (" up ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) <!> "up"
 let sleep = pright (pstr (" sleep ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) <!> "sleep"
 
-let run = pbetween (pstr " run ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "run"
-let avgHR = pright (pstr (" avg hr ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) <!> "avg hr"
+// let run = pbetween (pstr " run ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "run"
+// let bike = pbetween (pstr " bike ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "bike"
+// let berg = pbetween (pstr " berg ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "berg"
+// let squash = pbetween (pstr " squash ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "squash"
+// let avgHR = pright (pstr (" avg hr ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) <!> "avg hr"
 
-//ASK ABOUT THIS FOR RUN SECOND HALF OF OPTION 
-let runActivity = pseq run avgHr (fun (a,b) -> {time = a; avgHr = b}) <|>  run (fun a -> {time = a; avgHr = -1}) <!> "run Activity"
+let run = activity "run" <!> "run"
+let bike = activity "bike" <!> "bike"
+let berg = activity "berg" <!> "berg"
+let squash = activity "squash" <!> "squash"
+let avgHR = activity "avg hr" <!> "avg hr"
+let activity (a: string) = pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "activity"
+
+//DO BIKE, BERG, SQUASH activities 
+let runActivity = 
+    pseq run avgHr (fun (a,b) -> {time = a; avgHr = Some b}) <|>  
+    run |>> (fun a -> {time = a; avgHr = None}) <!> "run Activity"
 
 //make into their respective types 
 //FIX EXPR TO INCLUDE EVERYTHING 
