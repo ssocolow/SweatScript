@@ -2,15 +2,28 @@ module Evaluator
 
 // type Date = string
 type Date = int
-
 type Time = float
+type Up = Time
+type Sleep = Time
+
+type HeartRate = int
 
 type H2o = Time
+type H2oList = H2o list
 
-type Activity = H2o list
+type Run = {time: Time; avgHR: HeartRate}
+type RunList = Run list
 
-type Day = {date: Date; activity: Activity}
+type Bike = {time: Time; avgHR: HeartRate}
+type BikeList = Bike list
 
+type Berg = {time: Time; avgHR: HeartRate}
+type BergList = Berg list
+
+type Activity = [RunList; BikeList; BergList]
+
+//activity is a list of records 
+type Day = {date: Date; up: Up; sleep: Sleep; activity: Activity}
 type History = Day list
 
 let CANVAS_SZ = 1000
@@ -61,3 +74,10 @@ let eval (day: Day) : string =
     "<polyline points=\"" + startingPoint + points + lastPoint + "\" stroke=\"blue\" fill=\"none\" style=\"stroke: blue; stroke-width: 5;\"/>\n" +
     " <image href=\"https://raw.githubusercontent.com/ninjahat77/pastebin/main/health_data_graph.svg\" x=\"0\" y=\"0\" height=\"1500\" width=\"1500\"/>\n" +
     "</svg>\n"
+
+let rec deconstruct (history: History) = 
+    match history with 
+    | [] -> ""
+    | head :: tail ->
+        eval head + destruct tail 
+        

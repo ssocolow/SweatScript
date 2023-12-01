@@ -9,7 +9,7 @@ let main args =
         let text = IO.File.ReadAllText file
         match parse text with
         | Some ast ->
-            let svg = eval ast
+            let svg = deconstruct ast
             printfn "%s" svg
             0
         | None ->
