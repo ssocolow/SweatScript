@@ -1,0 +1,1 @@
+date 03092023 up 0509 run 72 mins h2o 0812 h2o 1000 erg 60 mins avghr 130 h2o 1800 sleep 2300

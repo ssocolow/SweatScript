@@ -27,7 +27,7 @@ let run = activity "run" <!> "run"
 let bike = activity "bike" <!> "bike"
 let berg = activity "berg" <!> "berg"
 let squash = activity "squash" <!> "squash"
-let avgHR = activity "avg hr" <!> "avg hr"
+let avgHR = activity "avghr" <!> "avg hr"
 let activity (a: string) = pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "activity"
 
 //DO BIKE, BERG, SQUASH activities 

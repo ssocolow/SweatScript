@@ -22,16 +22,25 @@ type H2oList = H2o list
 
 // type Activity = [RunList; BikeList; BergList]
 
+// type Activity = 
+// | Run of exercise List
+// | Bike of exercise List
+// | Berg of exercise List
+// | Squash of exercise List
+// and exercise
+// | {time: Time; avgHR: HeartRate}
+
+type Exercise = {time: int; avgHR: HeartRate}
+
 type Activity = 
 | Run of exercise List
-| Bike of exercise List
-| Berg of exercise List
-| Squash of exercise List
-and exercise
-| {time: Time; avgHR: HeartRate}
+
+//GOAL: make 3 graphs with dates on y axis for totalHydration totalExercise totalSleep 
+//and possibly make an svg of most recent day's hydration over the day
+//all displayed in one html page
 
 //activity is a list of records 
-type Day = {date: Date; up: Up; sleep: Sleep; activity: Activity}
+type Day = {date: Date; sleepTime: int; activity: Activity}
 type History = Day list
 
 let CANVAS_SZ = 1000
@@ -50,6 +59,10 @@ let start = {x=startX; y=startY}
 //     | Green -> "rgb(0,255,0)"
 //     | Blue -> "rgb(0,0,255)"
 //     | Purple -> "rgb(128,8,165)"
+
+let startHTML = "<html><head><script src=\"https://cdn.plot.ly/plotly-2.21.0.min.js\" charset=\"utf-8\"></script><title>Plotly.NET Datavisualization</title><meta charset=\"UTF-8\"><meta name=\"description\" content=\"A plotly.js graph generated with Plotly.NET\"><link id=\"favicon\" rel=\"shortcut icon\" type=\"image/png\" href=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAA1VBMVEVHcEwQnv+gCXURnf+gCXURnf8Rnf+gCXURnf+gCXWgCXURnf+gCHURnf+gCXURnf+gCXURnf+gCXUwke5YVbykBXEijO+gCXURnf8Rnf8Rnf8Rnf8Rnf8Rnf+gCXWIIoygCXUohekRnf8Rnf8Qn/+gCXUQnf8SoP////8ijO+PG4agAnGQLY6gEnrP7f94yP8aof8YwP/DY6jJcrDuz+RlwP/owt0Urv8k/v4e4v9Nr9F1XaSxMoyx3/9rc7Ayq/98UZ3gr9L8+v05rv9Fv9rF5/+7T52h9OprAAAAJHRSTlMAINTUgPmA+gYGNbu7NR9PR/xP/hoh/o74f471R3x8uie60TS1lKLVAAABzUlEQVRYw83X2XKCMBQGYOyK3RdL9x0ChVCkVAHFfXn/RyphKSIBE85Mp8woV/8HOUByIgj/+mg2yb8o1s4/nZHTw2NNobmzf0HOp/d7Ys18Apzv1hHCvJICqIZA8hnAL0T5FYBXiPOrAJ+Q5HMAj5Dm8wC78JtfA1iFLK8oeYBNWM1vvQitltB4QxxCLn8gXD2/NoTjbXZhLX9ypH8c8giFvKJLiEMo5gnALlDyEcAq0PIxwCZQ8wnAItDzKbBZKObNBJDlMCFvEor5YQ8buDfUJdt3kevb1QLl+j2vb4y9OZZ8z0a251feA238uG8qZh/rkmurSLXdqjrQ62eQn5EWsaqS9Dweh3ewDOI7aHdG5ULJ8yM1WE67cQ0604FaJqx/v0leGc6x8aV94+gpWNqiTR3FrShcU68fHqYSA3J47Qwgwnsm3NxtBtR2NVA2BKcbxIC1mFUOoaSIZldzIuDyU+tkAPtjoAMcLwIV4HkVaQDXx0ABOD9HZxIYwcTRJWswQrOBxT8hpBMKIi+xWmdK4pvS4JMqfFqHLyzwpQ2+uMKXd3iDAW9x4E0WvM2DN5rwVhfebMPbffiGA77lgW+64Ns++MYTvvX9m+MHc8vmMWg2fMUAAAAASUVORK5CYII=\"><title>Plotly.NET Datavisualization</title><meta charset=\"UTF-8\"><meta name=\"description\" content=\"A plotly.js graph generated with Plotly.NET\"><link id=\"favicon\" rel=\"shortcut icon\" type=\"image/png\" href=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAA1VBMVEVHcEwQnv+gCXURnf+gCXURnf8Rnf+gCXURnf+gCXWgCXURnf+gCHURnf+gCXURnf+gCXURnf+gCXUwke5YVbykBXEijO+gCXURnf8Rnf8Rnf8Rnf8Rnf8Rnf+gCXWIIoygCXUohekRnf8Rnf8Qn/+gCXUQnf8SoP////8ijO+PG4agAnGQLY6gEnrP7f94yP8aof8YwP/DY6jJcrDuz+RlwP/owt0Urv8k/v4e4v9Nr9F1XaSxMoyx3/9rc7Ayq/98UZ3gr9L8+v05rv9Fv9rF5/+7T52h9OprAAAAJHRSTlMAINTUgPmA+gYGNbu7NR9PR/xP/hoh/o74f471R3x8uie60TS1lKLVAAABzUlEQVRYw83X2XKCMBQGYOyK3RdL9x0ChVCkVAHFfXn/RyphKSIBE85Mp8woV/8HOUByIgj/+mg2yb8o1s4/nZHTw2NNobmzf0HOp/d7Ys18Apzv1hHCvJICqIZA8hnAL0T5FYBXiPOrAJ+Q5HMAj5Dm8wC78JtfA1iFLK8oeYBNWM1vvQitltB4QxxCLn8gXD2/NoTjbXZhLX9ypH8c8giFvKJLiEMo5gnALlDyEcAq0PIxwCZQ8wnAItDzKbBZKObNBJDlMCFvEor5YQ8buDfUJdt3kevb1QLl+j2vb4y9OZZ8z0a251feA238uG8qZh/rkmurSLXdqjrQ62eQn5EWsaqS9Dweh3ewDOI7aHdG5ULJ8yM1WE67cQ0604FaJqx/v0leGc6x8aV94+gpWNqiTR3FrShcU68fHqYSA3J47Qwgwnsm3NxtBtR2NVA2BKcbxIC1mFUOoaSIZldzIuDyU+tkAPtjoAMcLwIV4HkVaQDXx0ABOD9HZxIYwcTRJWswQrOBxT8hpBMKIi+xWmdK4pvS4JMqfFqHLyzwpQ2+uMKXd3iDAW9x4E0WvM2DN5rwVhfebMPbffiGA77lgW+64Ns++MYTvvX9m+MHc8vmMWg2fMUAAAAASUVORK5CYII=\"></head><body>"
+let endHTML = "</body></html>"
+
 
 let evalSingleActivity (h2o: H2o) (whichOne: int) : string =
     let x = string (startX + (h2o / 100.0) * 35.875)
@@ -87,5 +100,5 @@ let rec deconstruct (history: History) =
     match history with 
     | [] -> ""
     | head :: tail ->
-        eval head + destruct tail 
+        eval head + destruct tail
         
