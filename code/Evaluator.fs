@@ -1,5 +1,6 @@
 module Evaluator
 open AST
+open Plotly.NET
 
 let startingPoint = "122, 734 "
 let startX = 122.0
@@ -50,9 +51,50 @@ let eval (day: Day) : string =
     " <image href=\"https://raw.githubusercontent.com/ninjahat77/pastebin/main/health_data_graph.svg\" x=\"0\" y=\"0\" height=\"1500\" width=\"1500\"/>\n" +
     "</svg>\n"
 
-let rec deconstruct (history: History) = 
-    printfn "%A" (List.length history)
-    // match history with 
+//method for time math, returns in minutes
+//expects time in 0612 is 6:12am format and 1342 is 1:42pm
+let calcTimeSub (finishTime: int) (startTime: int) = ((finishTime / 100) - (startTime / 100)) * 60 + ((finishTime % 100) - (startTime % 100))
+
+let ifH2o1else0 (a: Activitiy) = 
+    match a with
+    | a.name = "h2o" -> a.modifiers.duration
+    | _ -> 0
+
+let getCardioTimes (a: Activitiy) =
+    match a with
+    | a.name <> "h2o" -> a.modifiers.duration
+    | _ -> 0
+
+let listToNums f (l: Activitiy list) = l |> List.map (fun a -> f a)
+
+let take2Dlist ll f = ll |> List.map (fun l -> listToNumsH2o f l)
+
+let take2DlistToInt ll = ll |> List.map (fun l -> List.sum l)
+
+let makeSleepGraph times dates = Chart.StackedColumn(values = times, Keys = dates) |> Chart.withYAxisStyle (TitleText = "Mins") |> GenericChart.toEmbeddedHTML
+
+let makeH2oGraph sums dates = Chart.StackedColumn(values = sums, Keys = dates) |> Chart.withYAxisStyle (TitleText = "Units of Water") |> GenericChart.toEmbeddedHTML
+
+let makeActivityGraph sums dates = Chart.StackedColumn(values = sums, Keys = dates) |> Chart.withYAxisStyle (TitleText = "Minutes of Cardio") |> GenericChart.toEmbeddedHTML
+
+//goes through list of days, makes list of dates, sleepTimes, and list of lists of activities
+let deconstruct (history: History) = 
+    //printfn "%A" (List.length history)
+    let dates = history |> List.map (fun day -> day.date)
+    let sleepTimes = history |> List.map (fun day -> calcTimeSub day.bedTime day.wakeTime)
+    let activities2D = history |> List.map (fun day -> day.activities)
+
+    let newlist = take2Dlist activities2D listToNums
+    let h2oSums = take2DlistToInt newlist
+
+    let sleepGraph = makeSleepGraph sleepTimes dates
+    let h2oGraph = makeH2oGraph h2oSums dates
+
+    let tempActList = take2Dlist activities2D getCardioTimes
+    let activityGraph = makeActivityGraph take2DlistToInt tempActList
+
+    sleepGraph + h2oGraph + activityGraph
+    // match history with
     // | [] -> ""
     // | head :: tail ->
     //     eval head + destruct tail
