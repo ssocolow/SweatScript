@@ -51,9 +51,10 @@ let eval (day: Day) : string =
     "</svg>\n"
 
 let rec deconstruct (history: History) = 
-    match history with 
-    | [] -> ""
-    | head :: tail ->
-        eval head + destruct tail
+    printfn "%A" (List.length history)
+    // match history with 
+    // | [] -> ""
+    // | head :: tail ->
+    //     eval head + destruct tail
 
-let startEval (history: History) =  
+let startEval (history: History) = startHTML + (deconstruct history) + endHTML
