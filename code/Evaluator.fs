@@ -2,12 +2,12 @@ module Evaluator
 open AST
 open Plotly.NET
 
-let startingPoint = "122, 734 "
-let startX = 122.0
-let startY = 734.0
-let rightStep = 36
-let upStep = 76
-let start = {x=startX; y=startY}
+// let startingPoint = "122, 734 "
+// let startX = 122.0
+// let startY = 734.0
+// let rightStep = 36
+// let upStep = 76
+// let start = {x=startX; y=startY}
 // let evalColor (color: Color) : string =
 //     match color with
 //     | Red -> "rgb(255,0,0)"
@@ -19,55 +19,55 @@ let startHTML = "<html><head><script src=\"https://cdn.plot.ly/plotly-2.21.0.min
 let endHTML = "</body></html>"
 
 
-let evalSingleActivity (h2o: H2o) (whichOne: int) : string =
-    let x = string (startX + (h2o / 100.0) * 35.875)
-    let y = string (startY - ((float whichOne) * 76.0))
-    // printfn $"{whichOne} for y = {y} x = {x} h2o = {h2o}"
-    (x + ", " + y + " ")
+// let evalSingleActivity (h2o: H2o) (whichOne: int) : string =
+//     let x = string (startX + (h2o / 100.0) * 35.875)
+//     let y = string (startY - ((float whichOne) * 76.0))
+//     // printfn $"{whichOne} for y = {y} x = {x} h2o = {h2o}"
+//     (x + ", " + y + " ")
 
 
 //if this doesn't work, reverse the list before handing it off
-let rec evalActivities (activity: Activity) (whichOne: int): string =
-    match activity, whichOne with
-    | [],_ -> ""
-    | l::ls,x -> (evalActivities ls (x-1)) + (evalSingleActivity l x)
+// let rec evalActivities (activity: Activity) (whichOne: int): string =
+//     match activity, whichOne with
+//     | [],_ -> ""
+//     | l::ls,x -> (evalActivities ls (x-1)) + (evalSingleActivity l x)
 
-let startEval (activity: Activity): string =
-    let num = List.length activity
-    let newact = List.rev activity
-    evalActivities newact num
+// let startEval (activity: Activity): string =
+//     let num = List.length activity
+//     let newact = List.rev activity
+//     evalActivities newact num
 
-let eval (day: Day) : string =
-    let csz = CANVAS_SZ |> string
-    let len = List.length ((fun a -> a.activity) day)
-    let points = startEval ((fun a -> a.activity) day)
+// let eval (day: Day) : string =
+//     let csz = CANVAS_SZ |> string
+//     let len = List.length ((fun a -> a.activity) day)
+//     let points = startEval ((fun a -> a.activity) day)
 
-    let lastPoint = "983, " + string (startY - ((float len) * 76.0))
+//     let lastPoint = "983, " + string (startY - ((float len) * 76.0))
 
-    "<svg width=\"" + csz + "\" height=\"" + csz + "\"" +
-    " xmlns=\"http://www.w3.org/2000/svg\"" +
-    " xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n" +
-    "<polyline points=\"" + startingPoint + points + lastPoint + "\" stroke=\"blue\" fill=\"none\" style=\"stroke: blue; stroke-width: 5;\"/>\n" +
-    " <image href=\"https://raw.githubusercontent.com/ninjahat77/pastebin/main/health_data_graph.svg\" x=\"0\" y=\"0\" height=\"1500\" width=\"1500\"/>\n" +
-    "</svg>\n"
+//     "<svg width=\"" + csz + "\" height=\"" + csz + "\"" +
+//     " xmlns=\"http://www.w3.org/2000/svg\"" +
+//     " xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n" +
+//     "<polyline points=\"" + startingPoint + points + lastPoint + "\" stroke=\"blue\" fill=\"none\" style=\"stroke: blue; stroke-width: 5;\"/>\n" +
+//     " <image href=\"https://raw.githubusercontent.com/ninjahat77/pastebin/main/health_data_graph.svg\" x=\"0\" y=\"0\" height=\"1500\" width=\"1500\"/>\n" +
+//     "</svg>\n"
 
 //method for time math, returns in minutes
 //expects time in 0612 is 6:12am format and 1342 is 1:42pm
 let calcTimeSub (finishTime: int) (startTime: int) = ((finishTime / 100) - (startTime / 100)) * 60 + ((finishTime % 100) - (startTime % 100))
 
-let ifH2o1else0 (a: Activitiy) = 
-    match a with
-    | a.name = "h2o" -> a.modifiers.duration
+let ifH2o1else0 (a: Activity) = 
+    match a.name with
+    | "h2o" -> a.modifiers.duration
     | _ -> 0
 
-let getCardioTimes (a: Activitiy) =
-    match a with
-    | a.name <> "h2o" -> a.modifiers.duration
-    | _ -> 0
+let getCardioTimes (a: Activity) =
+    match a.name with
+    | "h2o" -> 0
+    | _ -> a.modifiers.duration
 
-let listToNums f (l: Activitiy list) = l |> List.map (fun a -> f a)
+let listToNums f (l: Activity list) = l |> List.map (fun a -> f a)
 
-let take2Dlist ll f = ll |> List.map (fun l -> listToNumsH2o f l)
+let take2Dlist ll f = ll |> List.map (fun l -> listToNums f l)
 
 let take2DlistToInt ll = ll |> List.map (fun l -> List.sum l)
 
