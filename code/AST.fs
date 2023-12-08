@@ -45,7 +45,7 @@ type Activity = {name: string; modifiers: ActivityModifiers}
 //all displayed in one html page
 
 //activity is a list of records
-type Day = {date: Date; wakeTime: int; bedTime: int; activities: Activitiy list}
+type Day = {date: Date; wakeTime: int; bedTime: int; activities: Activity list}
 
 type History = Day list
 

@@ -3,6 +3,7 @@ module Parser
 open Evaluator
 open Combinator
 open System
+open AST
 
 (*GRAMMAR*)
 let number = (pmany1 pdigit) |>> (fun ds -> stringify ds |> int)  <!> "number"
@@ -13,7 +14,11 @@ let date = pright (pstr ("date ")) number <!> "date"
 //convert fill h2o time
 // let fillh2o = pright (pstr("h2o ")) (pmany1 (pdigit |>> (fun ds -> ds |> stringify |> float))) <!> "fillh2o"
 // let fillh2o = (pright (pstr("h2o ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float))) <|> pright (pstr(" h2o ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) <!> "fillh2o"
-let fillh2o = pright (pstr(" h2o ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int |> (fun x -> {name="h2o"; modifiers={time=x; duration=-1; avgHR=-1}}))) <!> "fillh2o"
+// let fillh2o = (pright (pstr(" h2o ")) ((pmany1 pdigit))) |>> (fun ds -> ds |> stringify |> int |> (fun x -> {name="h2o"; modifiers={time=x; duration=-1; avgHR=-1}}))) <!> "fillh2o"
+
+//can you put none as an int??? QUESTION QUESTION QUESTION QUESTION 
+//let fillh2o = pright (pstr(" h2o ")) ((pmany1 pdigit)) |>> (fun ds -> ds |> stringify |> int |> (fun x -> {name="h2o"; modifiers= {duration = x; avgHR=-1} })) <!> "fillh2o"
+let fillh2o = pright (pstr(" h2o ")) ((pmany1 pdigit)) |>> (fun ds -> ds |> stringify |> int |> (fun x -> {name = "h2o"; modifiers= {duration = x; avgHR = -1} })) <!> "fillh2o"
 let up = pright (pstr (" up ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) <!> "up"
 let sleep = pright (pstr (" sleep ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) <!> "sleep"
 
@@ -22,16 +27,30 @@ let sleep = pright (pstr (" sleep ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stri
 // let berg = pbetween (pstr " berg ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "berg"
 // let squash = pbetween (pstr " squash ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "squash"
 // let avgHR = pright (pstr (" avg hr ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) <!> "avg hr"
-
+let activity (a: string) = 
+    (pseq 
+        (pbetween 
+            (pstr (" " + a + " ")) 
+                ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) 
+            (pstr " mins")) 
+        (pright 
+            (pstr " avghr ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int))) 
+    (fun (dur,HR) -> {name=a; modifiers={duration=dur; avgHR=HR}}))
+    <|> (pbetween 
+            (pstr (" " + a + " ")) 
+                ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) 
+            (pstr " mins") |>> 
+        (fun dur -> {name=a; modifiers={duration = dur; avgHR = -1}})) <!> "activity"
+    
 let run = activity "run" <!> "run"
 let bike = activity "bike" <!> "bike"
 let berg = activity "berg" <!> "berg"
 let squash = activity "squash" <!> "squash"
 // let avgHR = activity "avghr" <!> "avg hr"
-let activity (a: string) = (pseq (pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) (pstr " mins")) (pright (pstr " avghr ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int))) (fun (dur,HR) -> {name=a; modifiers={duration=dur; avgHR=HR}}))
-    <|> (pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) (pstr " mins") |>> (fun dur -> {name=a; modifiers={duration=dur; avgHR=-1}})) <!> "activity"
 
-//let activityModifier (a: string) = pbetween (pstr (" " + a + "")) ((pmany1))
+// let activity (a: string) = (pseq (pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) (pstr " mins")) (pright (pstr " avghr ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int))) (fun (dur,HR) -> {name=a; modifiers={duration=dur; avgHR=HR}}))
+//     <|> (pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) (pstr " mins") |>> (fun dur -> {name=a; modifiers={duration=dur; avgHR=-1}})) <!> "activity"
+
 
 //DO BIKE, BERG, SQUASH activities 
 // let runActivity = 
