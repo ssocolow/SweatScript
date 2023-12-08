@@ -36,7 +36,7 @@ type ActivityName =
 | Squash
 
 //some events like h2o or sleep only use time, so other fields will be set to -1
-type ActivityModifiers = {time: int; duration: int; avgHR: int}
+type ActivityModifiers = { duration: int; avgHR: int}
 
 //combinations of the activity with activity modifiers
 type Activity = {name: string; modifiers: ActivityModifiers}
