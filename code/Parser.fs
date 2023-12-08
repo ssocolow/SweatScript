@@ -28,8 +28,8 @@ let bike = activity "bike" <!> "bike"
 let berg = activity "berg" <!> "berg"
 let squash = activity "squash" <!> "squash"
 // let avgHR = activity "avghr" <!> "avg hr"
-let activity (a: string) = (pseq (pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) (pstr " mins")) (pright (pstr " avghr ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int))) (fun (dur,HR) -> {name=a; modifiers={time=-1; duration=dur; avgHR=HR}}))
-    <|> (pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) (pstr " mins") |>> (fun dur -> {name=a; modifiers={time=-1; duration=dur; avgHR=-1}})) <!> "activity"
+let activity (a: string) = (pseq (pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) (pstr " mins")) (pright (pstr " avghr ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int))) (fun (dur,HR) -> {name=a; modifiers={duration=dur; avgHR=HR}}))
+    <|> (pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) (pstr " mins") |>> (fun dur -> {name=a; modifiers={duration=dur; avgHR=-1}})) <!> "activity"
 
 //let activityModifier (a: string) = pbetween (pstr (" " + a + "")) ((pmany1))
 
