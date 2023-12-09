@@ -1,6 +1,6 @@
 module AST
 
-type Date = int
+type Date = string
 type Time = float
 type Up = Time
 type Sleep = Time

@@ -71,7 +71,7 @@ let take2Dlist ll f = ll |> List.map (fun l -> listToNums f l)
 
 let take2DlistToInt ll = ll |> List.map (fun l -> List.sum l)
 
-let makeSleepGraph times dates = Chart.StackedColumn(values = times, Keys = dates) |> Chart.withYAxisStyle (TitleText = "Mins") |> GenericChart.toEmbeddedHTML
+let makeSleepGraph times dates = Chart.StackedColumn(values = times, Keys = dates) |> Chart.withYAxisStyle (TitleText = "Minutes of Sleep") |> GenericChart.toEmbeddedHTML
 
 let makeH2oGraph sums dates = Chart.StackedColumn(values = sums, Keys = dates) |> Chart.withYAxisStyle (TitleText = "Units of Water") |> GenericChart.toEmbeddedHTML
 
@@ -84,14 +84,14 @@ let deconstruct (history: History) =
     let sleepTimes = history |> List.map (fun day -> calcTimeSub day.bedTime day.wakeTime)
     let activities2D = history |> List.map (fun day -> day.activities)
 
-    let newlist = take2Dlist activities2D listToNums
+    let newlist = take2Dlist activities2D ifH2o1else0
     let h2oSums = take2DlistToInt newlist
 
     let sleepGraph = makeSleepGraph sleepTimes dates
     let h2oGraph = makeH2oGraph h2oSums dates
 
     let tempActList = take2Dlist activities2D getCardioTimes
-    let activityGraph = makeActivityGraph take2DlistToInt tempActList
+    let activityGraph = makeActivityGraph (take2DlistToInt tempActList) dates
 
     sleepGraph + h2oGraph + activityGraph
     // match history with
