@@ -65,23 +65,32 @@ let getCardioTimes (a: Activity) =
     | "h2o" -> 0
     | _ -> a.modifiers.duration
 
+let getTypeCardioTimes (kind: string) (a: Activity)=
+    if kind = a.name then a.modifiers.duration else 0
+
 let listToNums f (l: Activity list) = l |> List.map (fun a -> f a)
 
 let take2Dlist ll f = ll |> List.map (fun l -> listToNums f l)
 
 let take2DlistToInt ll = ll |> List.map (fun l -> List.sum l)
 
-let makeSleepGraph times dates = Chart.StackedColumn(values = times, Keys = dates) |> Chart.withYAxisStyle (TitleText = "Minutes of Sleep") |> GenericChart.toEmbeddedHTML
+let makeSleepGraph times dates = Chart.StackedColumn(values = times, Keys = dates, Name = "Sleep", MarkerColor = Color.fromARGB 255 24 56 100) |> Chart.withYAxisStyle (TitleText = "Minutes of Sleep") |> GenericChart.toEmbeddedHTML
 
-let makeH2oGraph sums dates = Chart.StackedColumn(values = sums, Keys = dates) |> Chart.withYAxisStyle (TitleText = "Units of Water") |> GenericChart.toEmbeddedHTML
+let makeH2oGraph sums dates = Chart.StackedColumn(values = sums, Keys = dates, Name = "Hydration") |> Chart.withYAxisStyle (TitleText = "Units of Water") |> GenericChart.toEmbeddedHTML
 
-let makeActivityGraph sums dates = Chart.StackedColumn(values = sums, Keys = dates) |> Chart.withYAxisStyle (TitleText = "Minutes of Cardio") |> GenericChart.toEmbeddedHTML
+let makeActivityGraph sumsrun sumsbike sumsberg sumserg sumssquash dates = 
+    [ Chart.StackedColumn(values = sumsrun, Keys = dates, Name="Running")
+      Chart.StackedColumn(values = sumsbike, Keys = dates, Name = "Biking")
+      Chart.StackedColumn(values = sumsberg, Keys = dates, Name = "Berging")
+      Chart.StackedColumn(values = sumserg, Keys = dates, Name = "Erging")
+      Chart.StackedColumn(values = sumssquash, Keys = dates, Name = "Squash")]
+    |> Chart.combine |> Chart.withYAxisStyle (TitleText = "Minutes of Cardio") |> GenericChart.toEmbeddedHTML
 
 //goes through list of days, makes list of dates, sleepTimes, and list of lists of activities
 let deconstruct (history: History) = 
     //printfn "%A" (List.length history)
     let dates = history |> List.map (fun day -> day.date)
-    let sleepTimes = history |> List.map (fun day -> calcTimeSub day.bedTime day.wakeTime)
+    let sleepTimes = history |> List.map (fun day -> 1440 - (calcTimeSub day.bedTime day.wakeTime))
     let activities2D = history |> List.map (fun day -> day.activities)
 
     let newlist = take2Dlist activities2D ifH2o1else0
@@ -90,8 +99,13 @@ let deconstruct (history: History) =
     let sleepGraph = makeSleepGraph sleepTimes dates
     let h2oGraph = makeH2oGraph h2oSums dates
 
-    let tempActList = take2Dlist activities2D getCardioTimes
-    let activityGraph = makeActivityGraph (take2DlistToInt tempActList) dates
+    let tempActListRun = take2Dlist activities2D (getTypeCardioTimes "run")
+    let tempActListBike = take2Dlist activities2D (getTypeCardioTimes "bike")
+    let tempActListBerg = take2Dlist activities2D (getTypeCardioTimes "berg")
+    let tempActListErg = take2Dlist activities2D (getTypeCardioTimes "erg")
+    let tempActListSquash = take2Dlist activities2D (getTypeCardioTimes "squash")
+
+    let activityGraph = makeActivityGraph (take2DlistToInt tempActListRun) (take2DlistToInt tempActListBike) (take2DlistToInt tempActListBerg) (take2DlistToInt tempActListErg) (take2DlistToInt tempActListSquash) dates
 
     sleepGraph + h2oGraph + activityGraph
     // match history with

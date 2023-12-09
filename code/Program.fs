@@ -10,10 +10,10 @@ let main args =
         match parse text with
         | Some ast ->
             let svg = startEval ast
-            printfn "%A" svg
+            printfn "%s" svg
             0
         | None ->
             printfn "Invalid program."
             1
     with
-    | _ -> printfn "Usage: dotnet run day.rs > result.svg"; 1;
+    | _ -> printfn "Usage: dotnet run big-example.ss > result.html"; 1;
