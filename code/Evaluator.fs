@@ -93,7 +93,7 @@ let makeSleepGraph times dates = Chart.StackedColumn(values = times, Keys = date
 let makeH2oGraph sums dates = Chart.StackedColumn(values = sums, Keys = dates, Name = "Hydration") |> Chart.withYAxisStyle (TitleText = "Units of Water") |> GenericChart.toChartHTML
 
 let makeActivityGraph sumsrun sumsbike sumsberg sumserg sumssquash dates = 
-    [ Chart.StackedColumn(values = sumsrun, Keys = dates, Name="Running")
+    [ Chart.StackedColumn(values = sumsrun, Keys = dates, Name = "Running")
       Chart.StackedColumn(values = sumsbike, Keys = dates, Name = "Biking")
       Chart.StackedColumn(values = sumsberg, Keys = dates, Name = "Berging")
       Chart.StackedColumn(values = sumserg, Keys = dates, Name = "Erging")

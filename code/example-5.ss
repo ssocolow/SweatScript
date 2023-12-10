@@ -1,1 +1,0 @@
-date 12082023 up 0700 h2o 20 h2o 32 h2o 47 h2o 36 h2o 50 sleep 2300
