@@ -1,31 +1,6 @@
 module AST
 
 type Date = string
-type Time = float
-type Up = Time
-type Sleep = Time
-
-type H2o = Time
-type H2oList = H2o list
-
-// type Run = {time: Time; avgHR: HeartRate option}
-// type RunList = Run list
-
-// type Bike = {time: Time; avgHR: HeartRate}
-// type BikeList = Bike list
-
-// type Berg = {time: Time; avgHR: HeartRate}
-// type BergList = Berg list
-
-// type Activity = [RunList; BikeList; BergList]
-
-// type Activity = 
-// | Run of exercise List
-// | Bike of exercise List
-// | Berg of exercise List
-// | Squash of exercise List
-// and exercise
-// | {time: Time; avgHR: HeartRate}
 
 //names of each possible activity, currently NOT the way this works
 type ActivityName = 
@@ -48,8 +23,3 @@ type Activity = {name: string; modifiers: ActivityModifiers}
 type Day = {date: Date; wakeTime: int; bedTime: int; activities: Activity list}
 
 type History = Day list
-
-let CANVAS_SZ = 1000
-
-type Coordinate = { x: float; y: float }
-

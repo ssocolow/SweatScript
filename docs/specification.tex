@@ -54,53 +54,54 @@
 \newcommand{\ProblemHeader}	% Don't change this!
 
 \begin{document}
-
+\text{Simon Socolow and Rafay Syed}
 \vspace{\baselineskip}
 \begin{center}
-    \textbf{SweatScript}
+    \textbf{SweatScript Specification}
 \end{center}
 
-\textbf{Introduction}
-\begin{center}
-    The problem that our language helps to solve is the lack of fully user-controlled transparent health data collection software.  Our language will empower people to track health events throughout time to better understand their fitness levels, hydration, and sleep.  This language would quantify important metrics that are not usually tracked by average people and display those metrics in an easily digestible way through graphs.  Graphs of metrics over time spans of weeks or months would allow users to extrapolate important trends that can help readjust how they go about everyday life.
 
-This problem should have its own programming language because this would allow users more granular control over their data entry and would make the process of the transformation of their data into graphs more transparent than something like buttons on an app.  A platform-independent language could allow users to not be restricted to certain proprietary ecosystems like Apple or Garmin to track their health.  Also, without having to own a physical health tracking device to use this software, it is more accessible.  Finally, an Apple watch or Garmin watch might not be actually accurate, so having a programming language would help make accurate data entry easier.
 
-\end{center}
-\textbf{Design Principles}
-\begin{center}
-    Ideas that will guide our design center is around ease of use.  As this language is designed to be used throughout the day by simple entry of commands as health events occur, the speed and simplicity of the language is of high importance.  If the language is difficult to use, people won’t use it and syntax errors could stop them from visualizing their health data.  If it is slow to use, this will waste people’s time as users are already investing a small amount of time to use the language.  So, we want our commands to be easy to remember and fast to enter, either by a keyboard or voice recognition software.
-\end{center}
+\textbf{Introduction} \newline
+  SweatScript is one of the few fully user-controlled transparent health data collection software. SweatScript empowers people to track important health metrics to better understand their fitness levels, hydration, and sleep. For the most part, people keep track of important metrics—like water consumption and sleep patterns—in their heads which is not a reliable way of tracking data. SweatScript quantifies important metrics in an easily digestible way through graphs. Graphs that span days, weeks, or even months allow users to extrapolate important trends that can help readjust how they go about everyday life. \newline \newline
+This problem should have its own programming language because this would allow users more control over their data entry. In doing so, users are forced to be more honest about these important health metrics as any false input would alter the graphs and the user would have a possible warped perception of their health. A platform-independent language could allow users to not be restricted to certain proprietary ecosystems like Apple or Garmin to track their health.   Also, without having to own a physical health tracking device to use this software, it is more accessible. \newline
+
+\textbf{Design Principles} \newline
+   SweatScript is intended to be easily accessible and easy to use. As this language is designed to be used throughout the day by simple entry of commands as health events occur, the speed and simplicity of the language is of high importance.  If the language is difficult to use, people won’t use it.  If it is slow to use, this will waste people’s time as users are already investing a small amount of time to input their health information. \newline
+
+Therefore, our language often deals in abbreviations and simplified commands. For example, when entering the date, the user would enter a number. For example, December 3, 2023 would be inputted as 12032023. Although not a visually pleasing date, when entering the date through their phone, the user doesn't want to switch between keyboards to find a hyphen or forward slash. Thus, inputting 12032023 is much easier to the user than entering 12/03/2023. \newline
+
 
 \textbf{Examples}
+
+A program can consist of one or more days.  Examples can be found in example-1.ss, example-2.ss, and example-3.ss in the code directory.  Here are shortened versions of those programs.
 \begin{verbatim}
-date 04052023 up 0758 h2o 0918 squash 20 mins h2o 1500 sleep 2200
+date 04112023 up 0700 h2o 37 h2o 46 h2o 48 sleep 2330
+date 04122024 up 0800 run 34 mins avghr 46 berg 37 mins avghr 135 
+    h2o 36 squash 37 mins sleep 2320
 
-date 07032023 up 0809 h2o 0912 h2o 1100 berg 60 mins avghr 130
-    h2o 1800 sleep 2300
+date 04052023 up 0758 h2o 18 squash 20 mins h2o 15 sleep 2200
+date 04062023 up 0809 h2o 12 h2o 11 berg 60 mins avghr 130 h2o 18 sleep 2300
 
-date 03092023 up 0509 run 72 mins h2o 0812 h2o 1000 erg 60 mins 
-    avghr 130 h2o 1800 sleep 2300
-    
-date 04112023 up 700 h2o 1200 sleep 2330
+date 12052023 up 0730 h2o 10 berg 60 mins h2o 30 h2o 20 sleep 2330
+date 12062023 up 0800 h2o 20 erg 45 mins avghr 145 h2o 30 h2o 20 sleep 2345
+date 12072023 up 0830 h2o 20 h2o 30 run 20 mins h2o 10 h2o 20 sleep 2330
 
-date 11122023 h20 0812 h20 1024 h20 1354 h20 1620 h20 2124 h20 2300
 
-date 11162023 h2o 0700 h2o 0800 h2o 1000 h2o 1030 h2o 1100 h2o 1500 h2o 2100
 \end{verbatim}
-    Each example program (here assuming source code in 'tracker.ss' and output file name 'sweatscript.html') should produce an html file containing graphs that is in the same directory.  Programs can be executed with the command:\begin{verbatim}dotnet run tracker.ss > sweatscript.html
+    Each example program (here assuming source code in 'tracker.ss' and output file name 'sweatscript.html') should produce an HTML file containing graphs that is in the same directory.  The HTML file can then be viewed in a web browser, where three graphs should be shown. Programs can be executed with the command:\begin{verbatim}dotnet run tracker.ss > sweatscript.html
     \end{verbatim}
-\textbf{Language Concepts}
-\begin{center}
-    For our program, the key primitives will be the date, duration, time, activity, and activity modifiers. Date as a primitive is very important in marking the current day the user will be tracking their date. Time will be used to mark the current time for which the user has filled their water, thereby allowing the program itself to track how often the user fills up their water during the day. Duration will be used for the duration of an activity, allowing the program to chart how active the user is during the day. Activity will be used to indicate to the program what certain task the user is performing (waking up, filling up water, going on a run, etc..).  Activity modifiers will be used to provide additional information about the activities such as average heart rate.
+\textbf{Language Concepts} \newline
+  For SweatScript, the key primitives will be the date, duration, activity, and an activity modifier. Date as a primitive is very important in marking the current day the user will be tracking their date. Duration will be used for two instances. One refers to water consumption where duration will mark the amount of water the user has filled up in their water bottle. The consumption will be measured in ounces. The other instance will be used for the duration of an activity, allowing the program to chart how active the user is during the day. Activity will be used to indicate to the program what certain task the user is performing (waking up, filling up water, going on a run, etc..).  An activity modifier will be used to provide additional information about an activity. In this case, the activity modifier will be the average heart rate of a specific heart rate. \newline
 
-The combining forms will combine the duration or time or activity modifier with the specific activity. By combining the activity with the time/duration/date/modifier we are affixing meanings to these quantitative records allowing for certain tracking so users can extrapolate trends from the graphs that we will then produce. 
-\end{center}
-\textbf{Syntax}
-\begin{center}
+The combining forms will combine the duration or activity modifier with the specific activity. By combining the activity with the duration/modifier we are affixing quantitative values to these specific activities, so users can extrapolate trends from the then produced graphs. \newline 
+
+ Furthermore a singular space needs to be placed between each activity in order to be parsed and processed precisely. For example, one could not write \begin{verbatim}run   3 mins\end{verbatim} Instead they would have to input \begin{verbatim}run 3 mins\end{verbatim}
+
+\textbf{Formal Syntax} \newline
     Here is the BNF form of our language:
     \begin{verbatim}
-        <exp> ::= <day> <activity> | <exp>\n<exp>
+        <exp> ::= <day> <up> <activity> <sleep> | <exp>\n<exp>
         <day> ::= date <month><day><year>
         <month> ::= 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 | 12
         <day> ::= 01| 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 | 12 
@@ -108,7 +109,7 @@ The combining forms will combine the duration or time or activity modifier with 
             26 | 27 | 28 | 29 | 30 | 31
         <year> ::= <digit><digit><digit><digit>
         <digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-        <activity> ::= <activity> <activity> | <up> | <sleep> |
+        <activity> ::= <activity> <activity> |
             <h2o> | <measured activity description>
         <measured activity description> ::= <measured activity> 
             <activity modifier>
@@ -121,156 +122,174 @@ The combining forms will combine the duration or time or activity modifier with 
         <avghr> ::= avghr <quantity>
         <sleep> ::= sleep <time>
         <up> ::= up <time>
-        <h2o> ::= h2o <time>
+        <h2o> ::= h2o <quantity>
         
     \end{verbatim}
-\end{center}
-\textbf{Semantics}
+\textbf{Semantics} \newline
+type Date is a string and represents the date of the current day in question.
 
-i)
-\begin{center}
-Currently supported data types: date, time, activity, and activity modifier.  The date defines the day that is the parent of all the activities which have occurred throughout that day.  Activities are events during the day like: up and sleep for sleep tracking, h2o for hydration tracking, and run, erg, berg, squash for cardio tracking.  Time uses the 24-hour time format that represents when an activity occurred.  Activity modifiers are optional attributes of the activity they modify, such as duration and avghr (average heart rate).  For example, a time primitive would be “1438”, a date primitive would be “04222023”, an activity primitive would be “run”, and an activity modifier would be "avghr 140" or "80 mins".
-\end{center}
-ii)
-\begin{center}
-The actions of our language are: combining quantitative properties to a certain activity and groups of activities to certain days, and using the formed data structure to produce graphs representing hydration, activity, and sleep for each day. For example, our activity could be “erg”. We could then combine the duration and the average heart rate. So our combined form could look like “erg 60 mins avghr 145.” We do this with key word constants that are parsed and the properties are affixed to that activity in question. 
-\end{center}
-iii)
-\includegraphics[scale=0.15]{images/drawing.jpg}
+type Time is represented as an int and will be used to represent the time an user wakes up and goes to sleep.
 
-iv)
-\begin{center}
+type Up is represented as type Time and represents the time a user wakes up.
 
-\begin{forest}
-      [$<date>$
-        [$<month>$
-          [$04$]
-        ]
-        [$<day>$
-            [$05$]    
-        ]
-        [$<year>$
-            [$2023$]    
-        ]
-        [$<activity>$
-            [$<up>$
-                [$07:58$]
-            ]
-            [$<sleep>$
-                [$22:00$]
-            ]
-            [$<squash>$
-                [$20 mins$]
-            ]
-            [$<h2o>$
-                [$09:18$]
-                [$15:00$]
-            ]    
-        ]
-      ]
-    \end{forest}
-\scalebox{0.7}{\begin{forest}
-          [$<date>$
-        [$<month>$
-          [$07$]
-        ]
-        [$<day>$
-            [$03$]    
-        ]
-        [$<year>$
-            [$2023$]    
-        ]
-        [$<activity>$
-            [$<up>$
-                [$08:09$]
-            ]
-            [$<sleep>$
-                [$23:00$]
-            ]
-            [$<berg>$
-                [$60 mins$]
-                [$avghr 130$]
-            ]
-            [$<h2o>$
-                [$09:12$]
-                [$11:00$]
-                [$18:00$]
-            ]    
-        ]
-      ]
-    \end{forest}}
+type Sleep is represented as type Time and represents the time a user goes to sleep.
+
+type H2o is an int that represents the amount of water (in ounces) a user fills up.
+
+type H2oList is a list of type H2o's which represents the number of instances a user has filled up their water through the day. H2oList tracks the differing amounts of water the user fills up through the day.
+
+type ActivityModifiers is a record of the duration of an activity (duration) and the average heart rate (avgHR) of the activity in question. The duration is an int and the average heart rate is also an int. If an activity, like h2o only uses the duration (which in this case represents ounces and not minutes), the average heart rate is set to -1. AvgHR is also set to -1 if the user doesn't input their avgHR for the exercise activity they just completed. 
+
+type Activity is a record of the name of the activity and the activity modifier. The name is a string which can be "run", "squash", "berg", "erg" or "h2o". The modifier is of type ActivityModifiers. 
+
+type Day is a record of the date, wakeTime, bedTime, and the activities. date is of type Date. wakeTime and bedtime are ints. activities is an Activity List.
+
+type History is a list of Day's. History keeps track of all the days the user inputs through the week/month. 
+
+% i)
+% \begin{center}
+% Currently supported data types: date, time, activity, and activity modifier.  The date defines the day that is the parent of all the activities which have occurred throughout that day.  Activities are events during the day like: up and sleep for sleep tracking, h2o for hydration tracking, and run, erg, berg, squash for cardio tracking.  Time uses the 24-hour time format that represents when an activity occurred.  Activity modifiers are optional attributes of the activity they modify, such as duration and avghr (average heart rate).  For example, a time primitive would be “1438”, a date primitive would be “04222023”, an activity primitive would be “run”, and an activity modifier would be "avghr 140" or "80 mins".
+% \end{center}
+% ii)
+% \begin{center}
+% The actions of our language are: combining quantitative properties to a certain activity and groups of activities to certain days, and using the formed data structure to produce graphs representing hydration, activity, and sleep for each day. For example, our activity could be “erg”. We could then combine the duration and the average heart rate. So our combined form could look like “erg 60 mins avghr 145.” We do this with key word constants that are parsed and the properties are affixed to that activity in question. 
+% \end{center}
+% iii)
+% \includegraphics[scale=0.15]{images/drawing.jpg}
+
+% iv)
+% \begin{center}
+
+% \begin{forest}
+%       [$<date>$
+%         [$<month>$
+%           [$04$]
+%         ]
+%         [$<day>$
+%             [$05$]    
+%         ]
+%         [$<year>$
+%             [$2023$]    
+%         ]
+%         [$<activity>$
+%             [$<up>$
+%                 [$07:58$]
+%             ]
+%             [$<sleep>$
+%                 [$22:00$]
+%             ]
+%             [$<squash>$
+%                 [$20 mins$]
+%             ]
+%             [$<h2o>$
+%                 [$09:18$]
+%                 [$15:00$]
+%             ]    
+%         ]
+%       ]
+%     \end{forest}
+% \scalebox{0.7}{\begin{forest}
+%           [$<date>$
+%         [$<month>$
+%           [$07$]
+%         ]
+%         [$<day>$
+%             [$03$]    
+%         ]
+%         [$<year>$
+%             [$2023$]    
+%         ]
+%         [$<activity>$
+%             [$<up>$
+%                 [$08:09$]
+%             ]
+%             [$<sleep>$
+%                 [$23:00$]
+%             ]
+%             [$<berg>$
+%                 [$60 mins$]
+%                 [$avghr 130$]
+%             ]
+%             [$<h2o>$
+%                 [$09:12$]
+%                 [$11:00$]
+%                 [$18:00$]
+%             ]    
+%         ]
+%       ]
+%     \end{forest}}
 
 
-    \scalebox{0.7}{\begin{forest}
-          [$<date>$
-        [$<month>$
-          [$03$]
-        ]
-        [$<day>$
-            [$09$]    
-        ]
-        [$<year>$
-            [$2023$]    
-        ]
-        [$<activity>$
-            [$<up>$
-                [$05:09$]
-            ]
-            [$<sleep>$
-                [$23:00$]
-            ]
-            [$<run>$
-                [$72 mins$]
-            ]
-            [$<erg>$
-                [$60 mins$]
-                [$avghr 130$]
-            ]
-            [$<h2o>$
-                [$08:12$]
-                [$10:00$]
-                [$18:00$]
-            ]    
-        ]
-      ]
-    \end{forest}}
-    \end{center}
-v)
-\begin{center}
-Programs in our language read in input from the user provided they provide the correct keyword usage that will allow us to create the proper AST’s for the program. 
+%     \scalebox{0.7}{\begin{forest}
+%           [$<date>$
+%         [$<month>$
+%           [$03$]
+%         ]
+%         [$<day>$
+%             [$09$]    
+%         ]
+%         [$<year>$
+%             [$2023$]    
+%         ]
+%         [$<activity>$
+%             [$<up>$
+%                 [$05:09$]
+%             ]
+%             [$<sleep>$
+%                 [$23:00$]
+%             ]
+%             [$<run>$
+%                 [$72 mins$]
+%             ]
+%             [$<erg>$
+%                 [$60 mins$]
+%                 [$avghr 130$]
+%             ]
+%             [$<h2o>$
+%                 [$08:12$]
+%                 [$10:00$]
+%                 [$18:00$]
+%             ]    
+%         ]
+%       ]
+%     \end{forest}}
+%     \end{center}
+% v)
+% \begin{center}
+% Programs in our language read in input from the user provided they provide the correct keyword usage that will allow us to create the proper AST’s for the program. 
 
-The output for evaluating a program would be a graphical representation of the input the user provides. For example, if the user provides certain times in which they fill up their water bottle, our program could then output a line graph where each point is a time in the day they filled up their water bottle. 
+% The output for evaluating a program would be a graphical representation of the input the user provides. For example, if the user provides certain times in which they fill up their water bottle, our program could then output a line graph where each point is a time in the day they filled up their water bottle. 
 
-\end{center}
+% \end{center}
 
-\begin{center}
+% \begin{center}
 
-\begin{forest}
-    [$<date>$
-        [$<month>$
-          [$11$]
-        ]
-        [$<day>$
-            [$12$]    
-        ]
-        [$<year>$
-            [$2023$]    
-        ]
-        [$<h20>$
-            [$08:12$]
-            [$10:24$]
-            [$13:54$]
-            [$16:20$]
-            [$21:24$]
-            [$23:00$]
-        ]
-    ]
-\end{forest}
-\end{center}
-\begin{center}
-    There is no precedence or associativity\newline
-    \newline
-\end{center}
+% \begin{forest}
+%     [$<date>$
+%         [$<month>$
+%           [$11$]
+%         ]
+%         [$<day>$
+%             [$12$]    
+%         ]
+%         [$<year>$
+%             [$2023$]    
+%         ]
+%         [$<h20>$
+%             [$08:12$]
+%             [$10:24$]
+%             [$13:54$]
+%             [$16:20$]
+%             [$21:24$]
+%             [$23:00$]
+%         ]
+%     ]
+% \end{forest}
+% \end{center}
+% \begin{center}
+%     There is no precedence or associativity\newline
+%     \newline
+% \end{center}
 % \textbf{Minimal Former Grammar}
 % \begin{center}
 %     \begin{verbatim}
@@ -305,10 +324,13 @@ The output for evaluating a program would be a graphical representation of the i
 % \end{tabular} }
 % \end{center}
 
-\textbf{Remaining Work}
-\begin{center}
-    We have not yet implemented up, sleep, and activities besides h2o.  Also, in our minimal working version we produced one svg that showed hydration over the course of a single day.  In the future, we hope to make 3 bar graphs (with dates on the x-axis) showing: hydration, sleep, exercise all in one html document, using a framework called plotly.  We could also include an svg of the hydration over the most recent date.
-\end{center}
+\textbf{Remaining Work} \newline
+
+    % We have not yet implemented up, sleep, and activities besides h2o.  Also, in our minimal working version we produced one svg that showed hydration over the course of a single day.  In the future, we hope to make 3 bar graphs (with dates on the x-axis) showing: hydration, sleep, exercise all in one html document, using a framework called plotly.  We could also include an svg of the hydration over the most recent date.
+
+    One further enhancement we would like to see is to implement more activities. Right now we only have 4 exercises. With the way our parser is constructed, it should be easy to expand to other cardio activities like swimming or jump rope. Furthermore we would like to implement more activity modifiers that are more activity-specific. For example, for erging, one additional modifier could be split time or distance. \newline 
+
+    One feature that we did not implement was using the h2o type to represent the time the user filled up their water rather than the amount of water they filled up. We made this switch because it made more logical sense in our language to track the cumulative ounces of water a user drinks per day so they can see how how their water consumption changes on a macro level. They can compare the valleys and peaks of their hydration across a week or even a month. Ideally in the future we can implement our initial plan and allow the user to have a more micro perspective and see how their water consumption changes throughout the day. IE see how their water use changes between the morning and the night.
 
 % DO NOT DELETE ANYTHING BELOW THIS LINE
 \end{document}

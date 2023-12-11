@@ -8,26 +8,12 @@ open AST
 (*GRAMMAR*)
 let number = (pmany1 pdigit) |>> (fun ds -> stringify ds |> int)  <!> "number"
 let numberString = (pmany1 pdigit) |>> (fun ds -> stringify ds)  <!> "numberString"
-//convert this
-// let date = pright (pstr ("date ")) ((pleft number (pchar '-')) pseq(pleft(number pchar ('-')) number (fun (a,b) -> ) )) <!> "date"
 let date = pright (pstr ("date ")) numberString <!> "date"
 
-//convert fill h2o time
-// let fillh2o = pright (pstr("h2o ")) (pmany1 (pdigit |>> (fun ds -> ds |> stringify |> float))) <!> "fillh2o"
-// let fillh2o = (pright (pstr("h2o ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float))) <|> pright (pstr(" h2o ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) <!> "fillh2o"
-// let fillh2o = (pright (pstr(" h2o ")) ((pmany1 pdigit))) |>> (fun ds -> ds |> stringify |> int |> (fun x -> {name="h2o"; modifiers={time=x; duration=-1; avgHR=-1}}))) <!> "fillh2o"
-
-//can you put none as an int??? QUESTION QUESTION QUESTION QUESTION 
-//let fillh2o = pright (pstr(" h2o ")) ((pmany1 pdigit)) |>> (fun ds -> ds |> stringify |> int |> (fun x -> {name="h2o"; modifiers= {duration = x; avgHR=-1} })) <!> "fillh2o"
 let fillh2o = pright (pstr(" h2o ")) ((pmany1 pdigit)) |>> (fun ds -> ds |> stringify |> int |> (fun x -> {name = "h2o"; modifiers= {duration = x; avgHR = -1} })) <!> "fillh2o"
 let up = pright (pstr (" up ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) <!> "up"
 let sleep = pright (pstr (" sleep ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) <!> "sleep"
 
-// let run = pbetween (pstr " run ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "run"
-// let bike = pbetween (pstr " bike ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "bike"
-// let berg = pbetween (pstr " berg ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "berg"
-// let squash = pbetween (pstr " squash ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> float)) (pstr " mins") <!> "squash"
-// let avgHR = pright (pstr (" avg hr ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) <!> "avg hr"
 let activity (a: string) = 
     (pseq 
         (pbetween 
@@ -48,21 +34,9 @@ let bike = activity "bike" <!> "bike"
 let berg = activity "berg" <!> "berg"
 let erg = activity "erg" <!> "erg"
 let squash = activity "squash" <!> "squash"
-// let avgHR = activity "avghr" <!> "avg hr"
-
-// let activity (a: string) = (pseq (pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) (pstr " mins")) (pright (pstr " avghr ") ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int))) (fun (dur,HR) -> {name=a; modifiers={duration=dur; avgHR=HR}}))
-//     <|> (pbetween (pstr (" " + a + " ")) ((pmany1 pdigit) |>> (fun ds -> ds |> stringify |> int)) (pstr " mins") |>> (fun dur -> {name=a; modifiers={duration=dur; avgHR=-1}})) <!> "activity"
-
-
-//DO BIKE, BERG, SQUASH activities 
-// let runActivity = 
-//     pseq run avgHr (fun (a,b) -> {time = a; avgHr = Some b}) <|>  
-//     run |>> (fun a -> {time = a; avgHr = None}) <!> "run Activity"
 
 let insideDayExpressions = run <|> bike <|> berg <|> erg <|> squash <|> fillh2o <!> "inside day exp"
 
-//make into their respective types
-//FIX EXPR TO INCLUDE EVERYTHING 
 let expr = pseq (pseq date up (fun (theDate,upTime) -> (theDate,upTime))) (pseq (pmany0 insideDayExpressions) sleep (fun (allActivities, downTime) -> (allActivities, downTime))) (fun ((theDate,upTime),(allActivities, downTime)) -> {date=theDate; wakeTime=upTime; bedTime=downTime; activities=allActivities}) <!> "exp"
 let exprList = pmany1 ((pleft expr (pstr "\n")) <|> expr)
 

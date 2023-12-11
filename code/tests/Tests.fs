@@ -28,6 +28,7 @@ type TestClass () =
         | None -> Assert.IsTrue false
 
     [<TestMethod>]
+        //test the time subtractor function
         member this.checkEvaluator () =
             let startTime = 0840
             let endTime = 2340
