@@ -58,12 +58,26 @@ let makeActivityGraph sumsrun sumsbike sumsberg sumserg sumssquash dates =
       Chart.StackedColumn(values = sumssquash, Keys = dates, Name = "Squash")]
     |> Chart.combine |> Chart.withYAxisStyle (TitleText = "Minutes of Cardio") |> GenericChart.toChartHTML
 
+let hrTransform a day = if a.modifiers.avgHR <> (-1) then "<div><h4>" + day.date + ": " + a.name + " for " + (string a.modifiers.duration) + " minutes at " + (string a.modifiers.avgHR) + "BPM </h4></div>" else ""
+
+
+let turnHR day =
+  let strs = day.activities |> List.map (fun a -> hrTransform a day)
+  List.fold (fun str x -> str + x.ToString()) "" strs
+
+let rec heartRateToHTML h =
+  match h with
+  | [] -> ""
+  | x :: xs -> (turnHR x) + (heartRateToHTML xs)
+
 //goes through list of days, makes list of dates, sleepTimes, and list of lists of activities
 let deconstruct (history: History) = 
     //printfn "%A" (List.length history)
     let dates = history |> List.map (fun day -> day.date)
     let sleepTimes = history |> List.map (fun day -> 1440 - (calcTimeSub day.bedTime day.wakeTime))
     let activities2D = history |> List.map (fun day -> day.activities)
+
+    let heartRateStuff = heartRateToHTML history
 
     let newlist = take2Dlist activities2D ifH2o1else0
     let h2oSums = take2DlistToInt newlist
@@ -79,6 +93,6 @@ let deconstruct (history: History) =
 
     let activityGraph = makeActivityGraph (take2DlistToInt tempActListRun) (take2DlistToInt tempActListBike) (take2DlistToInt tempActListBerg) (take2DlistToInt tempActListErg) (take2DlistToInt tempActListSquash) dates
 
-    "<div class=\"graph-container\"><h1>Sleep</h1>" + sleepGraph + "</div><div class=\"graph-container\"><h1>Hydration</h1>" + h2oGraph + "</div><div class=\"graph-container\"><h1>Exercise</h1>" + activityGraph
+    "<div class=\"graph-container\"><h1>Sleep</h1>" + sleepGraph + "</div><div class=\"graph-container\"><h1>Hydration</h1>" + h2oGraph + "</div><div class=\"graph-container\"><h1>Exercise</h1>" + activityGraph + "<div><h2>Heart Rate Tracking</h2></div>" + heartRateStuff
 
 let startEval (history: History) = startHTML + (deconstruct history) + endHTML
