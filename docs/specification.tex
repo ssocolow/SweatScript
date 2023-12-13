@@ -92,6 +92,7 @@ date 12072023 up 0830 h2o 20 h2o 30 run 20 mins h2o 10 h2o 20 sleep 2330
     \end{verbatim}
     Plotly can be installed with \begin{verbatim}dotnet add package Plotly.NET --version 4.2.0
     \end{verbatim}
+    If there is a syntax error, it will be reported when the user opens the result.html file. \newline \newline
 \textbf{Language Concepts} \newline
   For SweatScript, the key primitives will be the date, duration, activity, and an activity modifier. Date as a primitive is very important in marking the current day the user will be tracking their date. Duration will be used for two instances. One refers to water consumption where duration will mark the amount of water the user has filled up in their water bottle. The consumption will be measured in ounces. The other instance will be used for the duration of an activity, allowing the program to chart how active the user is during the day. Activity will be used to indicate to the program what certain task the user is performing (waking up, filling up water, going on a run, etc..).  An activity modifier will be used to provide additional information about an activity. In this case, the activity modifier will be the average heart rate of a specific heart rate. \newline
 
