@@ -13,7 +13,7 @@ let main args =
             printfn "%s" svg
             0
         | None ->
-            printfn "Invalid program."
+            printfn "Usage: dotnet run big-example.ss > result.html. Make sure syntax is correct. Example: date 04112023 up 0700 h2o 37 sleep 2330"
             1
     with
     | _ -> printfn "Usage: dotnet run big-example.ss > result.html"; 1;
