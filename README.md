@@ -13,7 +13,8 @@ date 04072023 up 0700 h2o 46 run 47 mins avghr 135 sleep 2330
 date 04082024 up 0800 h2o 37 berg 36 mins squash 43 mins sleep 2320
 ```
 generates this html page:
-
+![alt text](https://raw.githubusercontent.com/ssocolow/SweatScript/main/docs/example-2-expectedOutput.png "Example Output")
+  
 ## Quickstart
 First, [install dotnet](https://dotnet.microsoft.com/en-us/download) as the parser and evaluator are written in F#.  
 
